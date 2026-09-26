@@ -27,9 +27,12 @@ fun SettingsRoute(
     viewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
 ) {
     val blurMode by viewModel.blurMode.collectAsStateWithLifecycle()
+    val pinNotification by viewModel.pinNotification.collectAsStateWithLifecycle()
     SettingsScreen(
         blurMode = blurMode,
+        pinNotification = pinNotification,
         onBlurModeChange = viewModel::setBlurMode,
+        onPinNotificationChange = viewModel::setPinNotification,
         onBack = onBack,
     )
 }
@@ -38,7 +41,9 @@ fun SettingsRoute(
 @Composable
 fun SettingsScreen(
     blurMode: Boolean,
+    pinNotification: Boolean,
     onBlurModeChange: (Boolean) -> Unit,
+    onPinNotificationChange: (Boolean) -> Unit,
     onBack: () -> Unit,
 ) {
     Scaffold(
@@ -66,6 +71,13 @@ fun SettingsScreen(
                 supportingContent = { Text(stringResource(R.string.settings_blur_subtitle)) },
                 trailingContent = {
                     Switch(checked = blurMode, onCheckedChange = onBlurModeChange)
+                },
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(R.string.settings_pin_title)) },
+                supportingContent = { Text(stringResource(R.string.settings_pin_subtitle)) },
+                trailingContent = {
+                    Switch(checked = pinNotification, onCheckedChange = onPinNotificationChange)
                 },
             )
         }

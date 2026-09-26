@@ -17,8 +17,16 @@ class SettingsViewModel(private val settings: SettingsRepository) : ViewModel() 
     val blurMode: StateFlow<Boolean> = settings.blurMode
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
+    val pinNotification: StateFlow<Boolean> = settings.pinNotification
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
     fun setBlurMode(enabled: Boolean) {
         viewModelScope.launch { settings.setBlurMode(enabled) }
+    }
+
+    /** NotificationSync observes this setting, so the notification updates in place on toggle. */
+    fun setPinNotification(enabled: Boolean) {
+        viewModelScope.launch { settings.setPinNotification(enabled) }
     }
 
     companion object {

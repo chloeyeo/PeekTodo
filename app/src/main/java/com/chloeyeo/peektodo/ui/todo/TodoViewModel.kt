@@ -8,10 +8,13 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.chloeyeo.peektodo.PeekTodoApp
 import com.chloeyeo.peektodo.data.Todo
 import com.chloeyeo.peektodo.data.TodoRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class TodoListUiState(
@@ -22,6 +25,13 @@ data class TodoListUiState(
 ) {
     val isEmpty: Boolean get() = open.isEmpty() && done.isEmpty()
 }
+
+/** The single row currently in edit mode, if any. */
+data class EditState(
+    val todoId: Long,
+    /** Set when the user tried to save blank text; cleared on the next keystroke. */
+    val showEmptyError: Boolean = false,
+)
 
 class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
 
@@ -36,6 +46,10 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
             initialValue = TodoListUiState(),
         )
 
+    private val _edit = MutableStateFlow<EditState?>(null)
+    /** Held here (not in the UI) so it survives rotation and only one row can be editing. */
+    val edit: StateFlow<EditState?> = _edit.asStateFlow()
+
     fun add(title: String) {
         val trimmed = title.trim()
         if (trimmed.isEmpty()) return
@@ -47,7 +61,36 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
     }
 
     fun delete(todo: Todo) {
+        if (_edit.value?.todoId == todo.id) _edit.value = null
         viewModelScope.launch { repository.delete(todo) }
+    }
+
+    fun startEdit(todo: Todo) {
+        _edit.value = EditState(todo.id)
+    }
+
+    fun cancelEdit() {
+        _edit.value = null
+    }
+
+    fun clearEditError() {
+        _edit.update { it?.copy(showEmptyError = false) }
+    }
+
+    /**
+     * Saves the edited title. Blank text is rejected with an error and the
+     * row stays in edit mode; the item is never deleted from here.
+     */
+    fun saveEdit(todo: Todo, title: String) {
+        val trimmed = title.trim()
+        if (trimmed.isEmpty()) {
+            _edit.update { it?.copy(showEmptyError = true) }
+            return
+        }
+        _edit.value = null
+        if (trimmed == todo.title) return
+        // rename() copies the entity, so id, created_at and is_done are untouched.
+        viewModelScope.launch { repository.rename(todo, trimmed) }
     }
 
     companion object {

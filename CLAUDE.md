@@ -18,4 +18,5 @@ Android app (Kotlin, Jetpack Compose, Room, DataStore) that surfaces open to-dos
 
 - Blur mode changes the notification text on the lock screen only. It must never alter the shade or post-unlock content, and nothing may pop up over the lock screen on its own (no full-screen intents, no showWhenLocked activities).
 - The notification channel stays IMPORTANCE_DEFAULT with sound and vibration off. IMPORTANCE_LOW gets hidden from the keyguard as "silent".
-- To-dos are added or edited only inside the app or the (planned) Glance widget, never from the lock screen.
+- To-dos are added or edited only inside the app or the (planned) Glance widget, never from the lock screen. Editing is inline in the list row (pencil icon), one row at a time, blank text rejected.
+- Pin notification (Settings toggle, default off): ongoing + deleteIntent that re-posts via `NotificationDismissedReceiver` while the setting is on. Off means a normal swipeable notification. No foreground service.

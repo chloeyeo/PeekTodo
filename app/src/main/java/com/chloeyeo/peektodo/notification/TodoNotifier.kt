@@ -29,6 +29,10 @@ import com.chloeyeo.peektodo.data.Todo
  * 2. While the keyguard is locked ([locked]) the notification's own content
  *    is the plain version, and it is re-posted with the full content on
  *    unlock. This covers the default setting whenever the process is alive.
+ *
+ * Pin mode: the notification is ongoing and carries a deleteIntent. Android 14+
+ * lets users swipe ongoing notifications away, so [NotificationDismissedReceiver]
+ * re-posts it as long as the setting is still on.
  */
 object TodoNotifier {
 
@@ -41,6 +45,7 @@ object TodoNotifier {
     /** InboxStyle caps visible lines; beyond this we show a "+N more" summary. */
     private const val MAX_LINES = 5
     private const val REQUEST_OPEN_APP = 0
+    private const val REQUEST_DISMISSED = 1
 
     /**
      * IMPORTANCE_DEFAULT, not LOW: SystemUI files LOW-importance notifications
@@ -80,10 +85,17 @@ object TodoNotifier {
      * Posts the notification for [openTodos], or cancels it when there is
      * nothing open. Safe to call from any thread.
      *
-     * @param blurMode the user's setting.
+     * @param blurMode the user's blur setting.
      * @param locked whether the keyguard is currently locked (screen off counts).
+     * @param pinned the user's pin setting: ongoing + re-post on dismiss.
      */
-    fun show(context: Context, openTodos: List<Todo>, blurMode: Boolean, locked: Boolean) {
+    fun show(
+        context: Context,
+        openTodos: List<Todo>,
+        blurMode: Boolean,
+        locked: Boolean,
+        pinned: Boolean,
+    ) {
         val manager = NotificationManagerCompat.from(context)
         if (openTodos.isEmpty()) {
             manager.cancel(NOTIFICATION_ID)
@@ -93,14 +105,14 @@ object TodoNotifier {
 
         val contentIntent = openAppIntent(context, revealOnLaunch = blurMode)
         val builder = if (blurMode && locked) {
-            plainBuilder(context, openTodos.size)
+            plainBuilder(context, openTodos.size, pinned)
         } else {
-            fullBuilder(context, openTodos)
+            fullBuilder(context, openTodos, pinned)
         }
         builder.setContentIntent(contentIntent)
 
         if (blurMode) {
-            val publicVersion = plainBuilder(context, openTodos.size)
+            val publicVersion = plainBuilder(context, openTodos.size, pinned)
                 .setContentIntent(contentIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .build()
@@ -120,29 +132,40 @@ object TodoNotifier {
         NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID)
     }
 
-    /** Everything the two variants share: channel, icon, colour, quiet ongoing behaviour. */
-    private fun baseBuilder(context: Context): NotificationCompat.Builder =
-        NotificationCompat.Builder(context, CHANNEL_ID)
+    /**
+     * Everything the two variants share: channel, icon, colour, quiet behaviour.
+     * Pin mode adds the ongoing flag and the dismiss receiver; off means a
+     * normal, swipeable notification whose dismissal is not intercepted.
+     */
+    private fun baseBuilder(context: Context, pinned: Boolean): NotificationCompat.Builder {
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
             .setColor(ContextCompat.getColor(context, R.color.notification_accent))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
-            .setOngoing(true)
+            .setOngoing(pinned)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
+        if (pinned) builder.setDeleteIntent(dismissedIntent(context))
+        return builder
+    }
 
     /** Default mode: count as the title, open titles as expandable lines. */
-    private fun fullBuilder(context: Context, openTodos: List<Todo>): NotificationCompat.Builder {
+    private fun fullBuilder(
+        context: Context,
+        openTodos: List<Todo>,
+        pinned: Boolean,
+    ): NotificationCompat.Builder {
         val titles = openTodos.map { it.title }
-        return baseBuilder(context)
+        return baseBuilder(context, pinned)
             .setContentTitle(taskCount(context, openTodos.size))
             .setContentText(titles.first())
             .setStyle(inboxStyle(context, titles))
     }
 
     /** Blur mode on the lock screen: app name + count, nothing expandable. */
-    private fun plainBuilder(context: Context, count: Int): NotificationCompat.Builder =
-        baseBuilder(context)
+    private fun plainBuilder(context: Context, count: Int, pinned: Boolean): NotificationCompat.Builder =
+        baseBuilder(context, pinned)
             .setContentTitle(context.getString(R.string.app_name))
             .setContentText(taskCount(context, count))
 
@@ -171,4 +194,13 @@ object TodoNotifier {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
     }
+
+    /** Fired by the system on swipe-away or "Clear all"; delivered even if the process is dead. */
+    private fun dismissedIntent(context: Context): PendingIntent =
+        PendingIntent.getBroadcast(
+            context,
+            REQUEST_DISMISSED,
+            Intent(context, NotificationDismissedReceiver::class.java),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
 }

@@ -7,6 +7,10 @@
     <string name="todo_input_hint">Add a to-do…</string>
     <string name="todo_add">Add</string>
     <string name="todo_delete">Delete</string>
+    <string name="todo_edit">Edit</string>
+    <string name="todo_save">Save</string>
+    <string name="todo_cancel">Cancel</string>
+    <string name="todo_edit_empty_error">A to-do can\'t be empty</string>
     <string name="todo_empty">Nothing to do. Add your first task above.</string>
     <string name="todo_section_done">Done</string>
     <string name="action_settings">Settings</string>
@@ -16,6 +20,8 @@
     <string name="settings_title">Settings</string>
     <string name="settings_blur_title">Blur mode</string>
     <string name="settings_blur_subtitle">Hide to-do text on the lock screen. Only the task count stays visible until you unlock.</string>
+    <string name="settings_pin_title">Pin notification</string>
+    <string name="settings_pin_subtitle">Keep the to-do notification from being swiped away. If it is dismissed or cleared, it comes straight back.</string>
 
     <!-- Notification -->
     <string name="notification_channel_name">Open to-dos</string>
