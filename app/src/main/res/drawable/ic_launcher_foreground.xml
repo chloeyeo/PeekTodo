@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Card -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,30h40a6,6 0 0 1 6,6v36a6,6 0 0 1 -6,6h-40a6,6 0 0 1 -6,-6v-36a6,6 0 0 1 6,-6z" />
+    <!-- Three "task" lines -->
+    <path
+        android:fillColor="#1E5EFF"
+        android:pathData="M40,42h28v4h-28zM40,52h28v4h-28zM40,62h18v4h-18z" />
+    <!-- Tick -->
+    <path
+        android:fillColor="#1E5EFF"
+        android:pathData="M62,64l4,4 8,-8 2.5,2.5 -10.5,10.5 -6.5,-6.5z" />
+</vector>

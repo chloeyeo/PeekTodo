@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PeekTodo</string>
+
+    <!-- To-do list screen -->
+    <string name="todo_list_title">PeekTodo</string>
+    <string name="todo_input_hint">Add a to-do…</string>
+    <string name="todo_add">Add</string>
+    <string name="todo_delete">Delete</string>
+    <string name="todo_empty">Nothing to do. Add your first task above.</string>
+    <string name="todo_section_done">Done</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_back">Back</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_blur_title">Blur mode</string>
+    <string name="settings_blur_subtitle">Hide to-do text on the lock screen. Only the task count stays visible until you unlock.</string>
+
+    <!-- Notification -->
+    <string name="notification_channel_name">Open to-dos</string>
+    <string name="notification_channel_description">Keeps your open to-dos visible on the lock screen.</string>
+    <plurals name="task_count">
+        <item quantity="one">%1$d task</item>
+        <item quantity="other">%1$d tasks</item>
+    </plurals>
+    <plurals name="notification_more">
+        <item quantity="one">+%1$d more</item>
+        <item quantity="other">+%1$d more</item>
+    </plurals>
+</resources>
