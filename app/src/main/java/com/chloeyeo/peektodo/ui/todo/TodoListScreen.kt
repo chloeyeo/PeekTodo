@@ -1,13 +1,17 @@
 package com.chloeyeo.peektodo.ui.todo
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -20,17 +24,18 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,17 +48,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chloeyeo.peektodo.R
 import com.chloeyeo.peektodo.data.Todo
+import com.chloeyeo.peektodo.ui.components.ClipboardCard
+import com.chloeyeo.peektodo.ui.components.ShibaCheckbox
 import com.chloeyeo.peektodo.ui.reveal.RevealText
+import com.chloeyeo.peektodo.ui.theme.shiba
 
 @Composable
 fun TodoListRoute(
@@ -112,9 +122,15 @@ fun TodoListScreen(
     BackHandler(enabled = edit != null, onBack = onCancelEdit)
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.todo_list_title)) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    actionIconContentColor = MaterialTheme.colorScheme.onBackground,
+                ),
                 actions = {
                     IconButton(onClick = onOpenSettings) {
                         Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.action_settings))
@@ -134,22 +150,11 @@ fun TodoListScreen(
             )
 
             if (state.loaded && state.isEmpty) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = stringResource(R.string.todo_empty),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
+                EmptyState(modifier = Modifier.fillMaxSize())
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 24.dp),
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 24.dp),
                 ) {
                     itemsIndexed(state.open) { index, todo ->
                         TodoRow(
@@ -167,12 +172,11 @@ fun TodoListScreen(
                     }
                     if (state.done.isNotEmpty()) {
                         item(key = "done-header") {
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                             Text(
                                 text = stringResource(R.string.todo_section_done),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                                modifier = Modifier.padding(start = 8.dp, top = 16.dp, bottom = 8.dp),
                             )
                         }
                         items(state.done, key = { it.id }) { todo ->
@@ -203,6 +207,30 @@ private fun LazyListScope.itemsIndexed(
     items(todos.size, key = { todos[it].id }) { index -> content(index, todos[index]) }
 }
 
+/** The shiba from the launcher icon, peeking over an empty clipboard. */
+@Composable
+private fun EmptyState(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.padding(horizontal = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(Modifier.height(24.dp))
+        // The adaptive-icon foreground keeps its 108 dp canvas padding, so it
+        // is drawn large for the art itself to land around 130 dp.
+        Image(
+            painter = painterResource(R.drawable.ic_launcher_foreground),
+            contentDescription = null,
+            modifier = Modifier.size(220.dp),
+        )
+        Text(
+            text = stringResource(R.string.todo_empty),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
 @Composable
 private fun AddTodoRow(
     onAdd: (String) -> Unit,
@@ -225,6 +253,8 @@ private fun AddTodoRow(
             onValueChange = { text = it },
             placeholder = { Text(stringResource(R.string.todo_input_hint)) },
             singleLine = true,
+            shape = MaterialTheme.shapes.medium,
+            colors = clipboardFieldColors(),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { submit() }),
             modifier = Modifier.weight(1f),
@@ -232,12 +262,34 @@ private fun AddTodoRow(
         FilledIconButton(
             onClick = submit,
             enabled = text.isNotBlank(),
-            modifier = Modifier.padding(start = 8.dp),
+            shape = MaterialTheme.shapes.small,
+            colors = IconButtonDefaults.filledIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
+            modifier = Modifier
+                .padding(start = 10.dp)
+                .size(52.dp)
+                // Orange on khaki is only 1.7:1, so the ink outline defines the button edge.
+                .border(1.5.dp, MaterialTheme.shiba.cardOutline, MaterialTheme.shapes.small),
         ) {
             Icon(Icons.Default.Add, contentDescription = stringResource(R.string.todo_add))
         }
     }
 }
+
+/** Text field colours that read like a line on the clipboard. */
+@Composable
+private fun clipboardFieldColors() = OutlinedTextFieldDefaults.colors(
+    focusedContainerColor = MaterialTheme.shiba.card,
+    unfocusedContainerColor = MaterialTheme.shiba.card,
+    errorContainerColor = MaterialTheme.shiba.card,
+    focusedBorderColor = MaterialTheme.colorScheme.secondary,
+    unfocusedBorderColor = MaterialTheme.shiba.cardOutline,
+    cursorColor = MaterialTheme.colorScheme.secondary,
+    focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+)
 
 @Composable
 private fun TodoRow(
@@ -252,49 +304,52 @@ private fun TodoRow(
     onCancelEdit: () -> Unit,
     onEditTextChanged: () -> Unit,
 ) {
-    if (edit != null) {
-        EditTodoRow(
-            todo = todo,
-            showEmptyError = edit.showEmptyError,
-            onSave = { onSaveEdit(todo, it) },
-            onCancel = onCancelEdit,
-            onTextChanged = onEditTextChanged,
-        )
-        return
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 4.dp, end = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Checkbox(
-            checked = todo.isDone,
-            onCheckedChange = { onSetDone(todo, it) },
-        )
-        RevealText(
-            text = todo.title,
-            index = revealIndex,
-            revealed = revealed,
-            style = MaterialTheme.typography.bodyLarge,
-            textDecoration = if (todo.isDone) TextDecoration.LineThrough else null,
-            color = if (todo.isDone) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(1f),
-        )
-        IconButton(onClick = { onStartEdit(todo) }) {
-            Icon(
-                Icons.Default.Edit,
-                contentDescription = stringResource(R.string.todo_edit),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+    ClipboardCard(modifier = Modifier.padding(vertical = 5.dp)) {
+        if (edit != null) {
+            EditTodoRow(
+                todo = todo,
+                showEmptyError = edit.showEmptyError,
+                onSave = { onSaveEdit(todo, it) },
+                onCancel = onCancelEdit,
+                onTextChanged = onEditTextChanged,
             )
-        }
-        IconButton(onClick = { onDelete(todo) }) {
-            Icon(
-                Icons.Default.Delete,
-                contentDescription = stringResource(R.string.todo_delete),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 4.dp, top = 2.dp, bottom = 2.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                ShibaCheckbox(
+                    checked = todo.isDone,
+                    onCheckedChange = { onSetDone(todo, it) },
+                )
+                RevealText(
+                    text = todo.title,
+                    index = revealIndex,
+                    revealed = revealed,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textDecoration = if (todo.isDone) TextDecoration.LineThrough else null,
+                    color = if (todo.isDone) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 4.dp),
+                )
+                IconButton(onClick = { onStartEdit(todo) }) {
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.todo_edit),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                IconButton(onClick = { onDelete(todo) }) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.todo_delete),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
         }
     }
 }
@@ -317,7 +372,7 @@ private fun EditTodoRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+            .padding(start = 12.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         OutlinedTextField(
@@ -328,6 +383,8 @@ private fun EditTodoRow(
             },
             singleLine = true,
             isError = showEmptyError,
+            shape = MaterialTheme.shapes.small,
+            colors = clipboardFieldColors(),
             supportingText = if (showEmptyError) {
                 { Text(stringResource(R.string.todo_edit_empty_error)) }
             } else {
@@ -343,7 +400,7 @@ private fun EditTodoRow(
             Icon(
                 Icons.Default.Check,
                 contentDescription = stringResource(R.string.todo_save),
-                tint = MaterialTheme.colorScheme.primary,
+                tint = MaterialTheme.colorScheme.secondary,
             )
         }
         IconButton(onClick = onCancel) {

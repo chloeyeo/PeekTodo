@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Monochrome layer for Android 13+ themed icons. Same geometry as the
+  foreground, reduced to one colour: solid shiba, pencil and sparkle, an
+  outlined clipboard with its checkboxes and lines. The launcher tints it.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+
+    <group
+        android:scaleX="0.78"
+        android:scaleY="0.78"
+        android:pivotX="0"
+        android:pivotY="0"
+        android:translateX="120"
+        android:translateY="113">
+
+        <!-- Sparkle -->
+        <path
+            android:fillColor="#000000"
+            android:pathData="M622,151 Q628,207 684,213 Q628,219 622,275 Q616,219 560,213 Q616,207 622,151 Z" />
+
+        <!-- Clipboard outline -->
+        <path
+            android:strokeColor="#000000"
+            android:strokeWidth="30"
+            android:strokeLineJoin="round"
+            android:pathData="M180,346 H637 A45,45 0 0 1 682,391 V829 A45,45 0 0 1 637,874 H180 A45,45 0 0 1 135,829 V391 A45,45 0 0 1 180,346 Z" />
+
+        <!-- Shiba: ears, head and paws as one solid mass -->
+        <path
+            android:fillColor="#000000"
+            android:strokeColor="#000000"
+            android:strokeWidth="17"
+            android:strokeLineJoin="round"
+            android:pathData="M300,142 L262,275 L378,228 Z M505,142 L545,275 L432,228 Z" />
+        <path
+            android:fillColor="#000000"
+            android:pathData="M245,352 C245,270 320,212 405,212 C490,212 565,270 565,352 Z" />
+        <path
+            android:fillColor="#000000"
+            android:pathData="M262,352 A48,30 0 1 0 358,352 A48,30 0 1 0 262,352 Z M452,352 A48,30 0 1 0 548,352 A48,30 0 1 0 452,352 Z" />
+
+        <!-- Checkboxes and lines -->
+        <path
+            android:strokeColor="#000000"
+            android:strokeWidth="22"
+            android:strokeLineJoin="round"
+            android:pathData="M204,463 H240 A12,12 0 0 1 252,475 V511 A12,12 0 0 1 240,523 H204 A12,12 0 0 1 192,511 V475 A12,12 0 0 1 204,463 Z M204,571 H240 A12,12 0 0 1 252,583 V619 A12,12 0 0 1 240,631 H204 A12,12 0 0 1 192,619 V583 A12,12 0 0 1 204,571 Z M204,681 H240 A12,12 0 0 1 252,693 V729 A12,12 0 0 1 240,741 H204 A12,12 0 0 1 192,729 V693 A12,12 0 0 1 204,681 Z" />
+        <path
+            android:strokeColor="#000000"
+            android:strokeWidth="24"
+            android:strokeLineCap="round"
+            android:pathData="M292,495 H570 M292,603 H525 M292,712 H478" />
+
+        <!-- Pencil silhouette -->
+        <path
+            android:fillColor="#000000"
+            android:strokeColor="#000000"
+            android:strokeWidth="17"
+            android:strokeLineJoin="round"
+            android:pathData="M820,458 A34,34 0 0 1 876,498 L657,808 L583,853 L601,768 Z" />
+    </group>
+</vector>

@@ -11,7 +11,7 @@
     <string name="todo_save">Save</string>
     <string name="todo_cancel">Cancel</string>
     <string name="todo_edit_empty_error">A to-do can\'t be empty</string>
-    <string name="todo_empty">Nothing to do. Add your first task above.</string>
+    <string name="todo_empty">Nothing to do yet. Add a task and Shiba will keep an eye on it.</string>
     <string name="todo_section_done">Done</string>
     <string name="action_settings">Settings</string>
     <string name="action_back">Back</string>

@@ -1,19 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  "Shiba wink" adaptive-icon foreground, traced from design/shiba_wink.png.
+  The viewport matches the 1024 px source so coordinates can be compared
+  directly; the outer group scales the art into the 66 dp safe zone.
+  Colours are the exact values sampled from the PNG.
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <!-- Card -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M34,30h40a6,6 0 0 1 6,6v36a6,6 0 0 1 -6,6h-40a6,6 0 0 1 -6,-6v-36a6,6 0 0 1 6,-6z" />
-    <!-- Three "task" lines -->
-    <path
-        android:fillColor="#1E5EFF"
-        android:pathData="M40,42h28v4h-28zM40,52h28v4h-28zM40,62h18v4h-18z" />
-    <!-- Tick -->
-    <path
-        android:fillColor="#1E5EFF"
-        android:pathData="M62,64l4,4 8,-8 2.5,2.5 -10.5,10.5 -6.5,-6.5z" />
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+
+    <group
+        android:scaleX="0.78"
+        android:scaleY="0.78"
+        android:pivotX="0"
+        android:pivotY="0"
+        android:translateX="120"
+        android:translateY="113">
+
+        <!-- Sparkle -->
+        <path
+            android:fillColor="#FFFBF3"
+            android:strokeColor="#3A332E"
+            android:strokeWidth="14"
+            android:strokeLineJoin="round"
+            android:pathData="M622,151 Q628,207 684,213 Q628,219 622,275 Q616,219 560,213 Q616,207 622,151 Z" />
+
+        <!-- Ears (drawn before the head so the head overlaps their base) -->
+        <path
+            android:fillColor="#E4A263"
+            android:strokeColor="#3A332E"
+            android:strokeWidth="17"
+            android:strokeLineJoin="round"
+            android:pathData="M300,142 L262,275 L378,228 Z" />
+        <path
+            android:fillColor="#FFF1DF"
+            android:pathData="M306,178 L284,254 L354,232 Z" />
+        <path
+            android:fillColor="#E4A263"
+            android:strokeColor="#3A332E"
+            android:strokeWidth="17"
+            android:strokeLineJoin="round"
+            android:pathData="M505,142 L545,275 L432,228 Z" />
+        <path
+            android:fillColor="#FFF1DF"
+            android:pathData="M499,178 L523,254 L455,232 Z" />
+
+        <!-- Clipboard -->
+        <path
+            android:fillColor="#FFFBF3"
+            android:strokeColor="#3A332E"
+            android:strokeWidth="17"
+            android:strokeLineJoin="round"
+            android:pathData="M180,346 H637 A45,45 0 0 1 682,391 V829 A45,45 0 0 1 637,874 H180 A45,45 0 0 1 135,829 V391 A45,45 0 0 1 180,346 Z" />
+
+        <!-- Head dome resting on the clipboard edge -->
+        <path
+            android:fillColor="#E4A263"
+            android:strokeColor="#3A332E"
+            android:strokeWidth="17"
+            android:strokeLineJoin="round"
+            android:pathData="M245,352 C245,270 320,212 405,212 C490,212 565,270 565,352 Z" />
+        <!-- Cream muzzle -->
+        <path
+            android:fillColor="#FFF1DF"
+            android:pathData="M300,352 C300,300 350,290 405,290 C460,290 510,300 510,352 Z" />
+        <!-- Winking left eye -->
+        <path
+            android:strokeColor="#3A332E"
+            android:strokeWidth="12"
+            android:strokeLineCap="round"
+            android:pathData="M318,296 Q338,278 358,296" />
+        <!-- Open right eye + highlight -->
+        <path
+            android:fillColor="#3A332E"
+            android:pathData="M447,292 A15,15 0 1 0 477,292 A15,15 0 1 0 447,292 Z" />
+        <path
+            android:fillColor="#FFFBF3"
+            android:pathData="M463,286 A5,5 0 1 0 473,286 A5,5 0 1 0 463,286 Z" />
+        <!-- Nose -->
+        <path
+            android:fillColor="#3A332E"
+            android:pathData="M391,314 A14,9 0 1 0 419,314 A14,9 0 1 0 391,314 Z" />
+
+        <!-- Paws gripping the clipboard edge -->
+        <path
+            android:fillColor="#FFF1DF"
+            android:strokeColor="#3A332E"
+            android:strokeWidth="17"
+            android:pathData="M262,352 A48,30 0 1 0 358,352 A48,30 0 1 0 262,352 Z" />
+        <path
+            android:strokeColor="#3A332E"
+            android:strokeWidth="10"
+            android:strokeLineCap="round"
+            android:pathData="M298,338 V366 M322,338 V366" />
+        <path
+            android:fillColor="#FFF1DF"
+            android:strokeColor="#3A332E"
+            android:strokeWidth="17"
+            android:pathData="M452,352 A48,30 0 1 0 548,352 A48,30 0 1 0 452,352 Z" />
+        <path
+            android:strokeColor="#3A332E"
+            android:strokeWidth="10"
+            android:strokeLineCap="round"
+            android:pathData="M488,338 V366 M512,338 V366" />
+
+        <!-- Checkboxes: two ticked, one empty -->
+        <path
+            android:fillColor="#FFFBF3"
+            android:strokeColor="#3A332E"
+            android:strokeWidth="14"
+            android:strokeLineJoin="round"
+            android:pathData="M204,463 H240 A12,12 0 0 1 252,475 V511 A12,12 0 0 1 240,523 H204 A12,12 0 0 1 192,511 V475 A12,12 0 0 1 204,463 Z" />
+        <path
+            android:strokeColor="#4E78A6"
+            android:strokeWidth="12"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M208,494 L221,507 L247,477" />
+        <path
+            android:fillColor="#FFFBF3"
+            android:strokeColor="#3A332E"
+            android:strokeWidth="14"
+            android:strokeLineJoin="round"
+            android:pathData="M204,571 H240 A12,12 0 0 1 252,583 V619 A12,12 0 0 1 240,631 H204 A12,12 0 0 1 192,619 V583 A12,12 0 0 1 204,571 Z" />
+        <path
+            android:strokeColor="#4E78A6"
+            android:strokeWidth="12"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M208,602 L221,615 L247,585" />
+        <path
+            android:fillColor="#FFFBF3"
+            android:strokeColor="#3A332E"
+            android:strokeWidth="14"
+            android:strokeLineJoin="round"
+            android:pathData="M204,681 H240 A12,12 0 0 1 252,693 V729 A12,12 0 0 1 240,741 H204 A12,12 0 0 1 192,729 V693 A12,12 0 0 1 204,681 Z" />
+
+        <!-- Task lines -->
+        <path
+            android:strokeColor="#C8C3BC"
+            android:strokeWidth="16"
+            android:strokeLineCap="round"
+            android:pathData="M292,495 H570 M292,603 H525 M292,712 H478" />
+
+        <!-- Pencil (eraser at top right, tip at bottom left) -->
+        <path
+            android:fillColor="#F1A7A0"
+            android:pathData="M820,458 A34,34 0 0 1 876,498 L840,549 L784,509 Z" />
+        <path
+            android:fillColor="#D9D2C7"
+            android:pathData="M784,509 L840,549 L819,578 L763,538 Z" />
+        <path
+            android:fillColor="#8FAECF"
+            android:pathData="M763,538 L819,578 L657,808 L601,768 Z" />
+        <path
+            android:fillColor="#F3D9B1"
+            android:pathData="M601,768 L657,808 L583,853 Z" />
+        <path
+            android:fillColor="#3A332E"
+            android:pathData="M590,822 L610,836 L583,853 Z" />
+        <path
+            android:strokeColor="#3A332E"
+            android:strokeWidth="12"
+            android:strokeLineCap="round"
+            android:pathData="M784,509 L840,549 M763,538 L819,578 M601,768 L657,808" />
+        <path
+            android:strokeColor="#3A332E"
+            android:strokeWidth="17"
+            android:strokeLineJoin="round"
+            android:pathData="M820,458 A34,34 0 0 1 876,498 L657,808 L583,853 L601,768 Z" />
+    </group>
 </vector>

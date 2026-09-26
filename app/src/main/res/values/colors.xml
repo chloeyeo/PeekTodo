@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#1E5EFF</color>
-    <color name="notification_accent">#1E5EFF</color>
+    <!-- Sampled from design/shiba_wink.png. Compose colours live in ui/theme/Color.kt. -->
+    <color name="ic_launcher_background">#F3E2B3</color>
+    <color name="notification_accent">#E4A263</color>
+    <!-- Window background before Compose draws; overridden in values-night. -->
+    <color name="window_background">#F3E2B3</color>
 </resources>

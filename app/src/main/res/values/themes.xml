@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Compose draws everything; the platform theme only needs to be action-bar-free. -->
+    <!-- Compose draws everything; the platform theme only supplies the
+         pre-Compose window colour and status bar icon contrast. -->
     <style name="Theme.PeekTodo" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>
