@@ -20,6 +20,10 @@ Android app (Kotlin, Jetpack Compose, Room, DataStore) that surfaces open to-dos
 - Icon: `drawable/ic_launcher_foreground.xml` (vector traced in the 1024 source coordinate space), `ic_launcher_monochrome.xml` (themed icons), `ic_notification.xml` (white silhouette). Legacy PNGs and the 512 store icon are regenerated with `powershell -File design\make_icons.ps1`.
 - Dynamic colour is off on purpose so the app always matches its icon.
 
+## Store listing
+
+`store-listing/` holds the Play listing text (`listing.md`), the capture checklist, `render_assets.py` (renders the 512 icon and feature graphic from the app's own vector; contains a small VectorDrawable rasteriser) and `make_screenshots.py` (raw captures → 1080x1920 phone and 1920x1080 tablet sets with caption bars). Capture on `Pixel_2_API_34` / `Pixel_Tablet_API_34`, never the A06 (wrong ratio). The listing must only describe features that exist; there is no widget.
+
 ## Design guardrails
 
 - Blur mode changes the notification text on the lock screen only. It must never alter the shade or post-unlock content, and nothing may pop up over the lock screen on its own (no full-screen intents, no showWhenLocked activities).
