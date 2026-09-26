@@ -65,6 +65,11 @@ Checked against Google Play's Metadata policy (play.google.com/about/developer-c
 - Permissions listed are exactly the two the manifest requests, each with its purpose. No sensitive permissions are requested.
 - Every feature mentioned exists in the code: notification with count and task lines, blur mode (plain count on the lock screen), pin notification with re-post on dismiss, restart/update re-post, in-app add/edit/complete/delete, no network access.
 
+## Privacy policy URL
+
+`https://chloeyeo.github.io/PeekTodo/privacy.html` — served by GitHub Pages from
+`docs/privacy.html` on `main`. The same URL is linked from the app's Settings screen.
+
 ## Screenshot captions
 
 Used by `make_screenshots.py` (matched on the raw file name):

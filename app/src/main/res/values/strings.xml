@@ -22,6 +22,8 @@
     <string name="settings_blur_subtitle">Hide to-do text on the lock screen. Only the task count stays visible until you unlock.</string>
     <string name="settings_pin_title">Pin notification</string>
     <string name="settings_pin_subtitle">Keep the to-do notification from being swiped away. If it is dismissed or cleared, it comes straight back.</string>
+    <string name="settings_privacy_title">Privacy policy</string>
+    <string name="settings_privacy_subtitle">Your tasks stay on this phone. Opens in your browser.</string>
 
     <!-- Notification -->
     <string name="notification_channel_name">Open to-dos</string>
