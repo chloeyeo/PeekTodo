@@ -22,7 +22,8 @@ android {
         applicationId = "com.chloeyeo.peektodo"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
+        // Play rejects a reused versionCode: bump this before every upload.
+        versionCode = 2
         versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -48,6 +49,9 @@ android {
                 "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("release")
+            // Play warns that the bundle has native code without debug symbols. The only
+            // native code is two prebuilt AndroidX libraries that ship fully stripped
+            // (no .symtab), so there is nothing to extract; the warning is expected.
         }
     }
 
