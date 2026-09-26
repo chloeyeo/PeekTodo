@@ -13,3 +13,7 @@
 *.keystore
 !debug.keystore
 .kotlin/
+
+# Upload signing key and its credentials: never commit
+/keystore/
+/keystore.properties
