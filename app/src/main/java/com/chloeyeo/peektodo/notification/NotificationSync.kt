@@ -17,6 +17,11 @@ import kotlinx.coroutines.launch
  * life of the process and re-posts the persistent notification whenever any
  * of them changes. Editing a title, toggling a setting, or locking the device
  * all flow through here.
+ *
+ * Lock-state changes are special: they exist only so blur mode can swap the
+ * text on the lock screen, so they may update a notification that is showing
+ * but must never bring back one the user swiped away (pin mode off). Pin mode
+ * on re-posts through [NotificationDismissedReceiver] instead.
  */
 class NotificationSync(
     private val context: Context,
@@ -33,23 +38,37 @@ class NotificationSync(
     private data class Inputs(
         val open: List<Todo>,
         val blur: Boolean,
-        val locked: Boolean,
         val pinned: Boolean,
+        val locked: Boolean,
+        val tick: Int,
     )
 
     fun start() {
         if (job?.isActive == true) return
         TodoNotifier.ensureChannel(context)
         job = scope.launch {
+            var previous: Inputs? = null
             combine(
                 todos.observeOpen(),
                 settings.blurMode,
-                lockState.isLocked,
                 settings.pinNotification,
+                lockState.isLocked,
                 refreshTicks,
-            ) { open, blur, locked, pinned, _ -> Inputs(open, blur, locked, pinned) }
-                .collect { (open, blur, locked, pinned) ->
-                    TodoNotifier.show(context, open, blurMode = blur, locked = locked, pinned = pinned)
+            ) { open, blur, pinned, locked, tick -> Inputs(open, blur, pinned, locked, tick) }
+                .collect { inputs ->
+                    val onlyLockChanged = previous != null && inputs.copy(locked = previous!!.locked) == previous
+                    previous = inputs
+                    if (onlyLockChanged) {
+                        // Nothing to swap when blur is off, and never resurrect a dismissed one.
+                        if (!inputs.blur || !TodoNotifier.isShowing(context)) return@collect
+                    }
+                    TodoNotifier.show(
+                        context,
+                        inputs.open,
+                        blurMode = inputs.blur,
+                        locked = inputs.locked,
+                        pinned = inputs.pinned,
+                    )
                 }
         }
     }

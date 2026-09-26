@@ -132,6 +132,10 @@ object TodoNotifier {
         NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID)
     }
 
+    /** True while the notification is in the shade, i.e. the user has not swiped it away. */
+    fun isShowing(context: Context): Boolean =
+        NotificationManagerCompat.from(context).activeNotifications.any { it.id == NOTIFICATION_ID }
+
     /**
      * Everything the two variants share: channel, icon, colour, quiet behaviour.
      * Pin mode adds the ongoing flag and the dismiss receiver; off means a
